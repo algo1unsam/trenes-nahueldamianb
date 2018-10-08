@@ -1,0 +1,95 @@
+import trenes.*
+
+test "punto 1" {
+	const tren1 = new Tren()
+	const vagon1 = new VagonPasajero(pasajeros = 20)
+	const vagon2 = new VagonPasajero(pasajeros = 20)
+	const vagon3 = new VagonCarga(cargaMaxima = 1000)
+	tren1.agregarVagon(vagon1)
+	tren1.agregarVagon(vagon2)
+	tren1.agregarVagon(vagon3)
+	assert.equals(tren1.vagones().count( { vagon => vagon.pesoMaximo() < 2500} ), 3)
+}
+
+test "punto 2" {
+	const tren1 = new Tren()
+	const loco1 = new Locomotora(velocidad = 80)
+    const loco2 = new Locomotora(velocidad = 90)
+    const loco3 = new Locomotora(velocidad = 50)
+	tren1.agregarLocomotora(loco1)
+	tren1.agregarLocomotora(loco2)
+    tren1.agregarLocomotora(loco3)
+	assert.equals(tren1.locomotoras().min({locomotora => locomotora.velocidad()}).velocidad(),50)
+}
+
+test "punto 3" {
+	const tren1 = new Tren()
+	const loco1 = new Locomotora(peso = 1000, arrastreMaximo = 5000)
+    const loco2 = new Locomotora(peso = 1000, arrastreMaximo = 5000)
+    const loco3 = new Locomotora(peso = 1000, arrastreMaximo = 5000)
+	tren1.agregarLocomotora(loco1)
+	tren1.agregarLocomotora(loco2)
+    tren1.agregarLocomotora(loco3)
+	assert.that(tren1.locomotoras().all( {locomotora => locomotora.esEficiente()} ))
+}
+
+test "punto 4" {
+	const tren1 = new Tren()
+	const loco1 = new Locomotora(peso = 1000, arrastreMaximo = 5000)
+    const loco2 = new Locomotora(peso = 1000, arrastreMaximo = 5000)
+	const vagon1 = new VagonPasajero(pasajeros = 10)
+	const vagon2 = new VagonCarga(cargaMaxima = 1000)
+	tren1.agregarLocomotora(loco1)
+	tren1.agregarLocomotora(loco2)
+	tren1.agregarVagon(vagon1)
+	tren1.agregarVagon(vagon2)
+	assert.that(tren1.arrastreTotal() >= tren1.pesoTotalVagones())
+}
+
+test "punto 5" {
+	const tren1 = new Tren()
+	const loco1 = new Locomotora(peso = 1200, arrastreMaximo = 2000)
+    const loco2 = new Locomotora(peso = 1200, arrastreMaximo = 2000)
+	const vagon1 = new VagonPasajero(pasajeros = 10)
+	const vagon2 = new VagonCarga(cargaMaxima = 1000)
+	tren1.agregarLocomotora(loco1)
+	tren1.agregarLocomotora(loco2)
+	tren1.agregarVagon(vagon1)
+	tren1.agregarVagon(vagon2)
+	assert.equals(tren1.pesoTotalVagones() - tren1.arrastreTotal(), 360)
+}
+
+test "punto 6" {
+	const depo = new Deposito()
+	const tren1 = new Tren()
+	const tren2 = new Tren()
+	const trenPesados = new Tren()
+	const vagon1 = new VagonPasajero(pasajeros = 20)
+	const vagon2 = new VagonCarga(cargaMaxima = 1000)
+	const vagon3 = new VagonPasajero(pasajeros = 10)
+	const vagon4 = new VagonCarga(cargaMaxima = 1500)
+	tren1.agregarVagon(vagon1)
+	tren1.agregarVagon(vagon2)
+	tren2.agregarVagon(vagon3)
+	tren2.agregarVagon(vagon4)
+	depo.agregarTren(tren1)
+	depo.agregarTren(tren2)
+	assert.equals(depo.vagonesMasPesados(),[vagon1, vagon4])
+}
+
+test "punto 7" {
+	const depo = new Deposito()
+	const tren1 = new Tren()
+	const tren2 = new Tren()
+	const vagon1 = new VagonPasajero(pasajeros = 20)
+	const vagon2 = new VagonCarga(cargaMaxima = 10000)
+	const vagon3 = new VagonPasajero(pasajeros = 10)
+	const vagon4 = new VagonCarga(cargaMaxima = 15000)
+	tren1.agregarVagon(vagon1)
+	tren1.agregarVagon(vagon2)
+	tren2.agregarVagon(vagon3)
+	tren2.agregarVagon(vagon4)
+	depo.agregarTren(tren1)
+	depo.agregarTren(tren2)
+	assert.that(depo.hayFormacionCompleja())
+}
